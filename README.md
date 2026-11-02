@@ -28,3 +28,59 @@ marketlly/
 ├── bot/                # Node.js automation bot
 ├── docs/               # Project documentation and specs
 └── docker-compose.yml  # Containerized local environment
+```
+
+## 🛠️ Local Development Setup
+
+### 1. Backend (Laravel API)
+```bash
+cd backend
+cp .env.example .env
+composer install
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
+
+### 2. Frontend (React SPA)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*(Ensure your `.env` has `VITE_API_URL=http://localhost:8000`)*
+
+### 3. Bot (Node.js)
+```bash
+cd bot
+npm install
+node index.js
+```
+
+### 🐳 Running with Docker (Recommended)
+To spin up the entire stack (PHP-FPM, Nginx, MySQL, Redis) instantly:
+```bash
+docker-compose up -d --build
+```
+
+## 🧪 Testing
+
+**Backend (PHPUnit):**
+```bash
+cd backend
+./vendor/bin/phpunit
+```
+*Coverage includes auth flows, payment safety, VIP logic, webhooks, and partner APIs.*
+
+**Frontend (Vitest):**
+```bash
+cd frontend
+npm run test
+```
+
+## 🔒 Security & Best Practices
+
+*   **Idempotent Webhooks:** Prevents double-crediting accounts on payment retries.
+*   **Server-Enforced Logic:** VIP limits and fees are locked on the backend (`VipService`), preventing frontend manipulation.
+*   **Precise Money Handling:** Custom `PreciseMoney` service ensures 24-decimal precision for crypto transactions.
+*   **Rate Limiting:** Protected API routes and login attempts.
